@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"> <!-- Bootstrap Icons -->
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .login-box h2 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #667eea;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #5563c1;
+        }
+
+        /* Şifre kutusunun içine göz simgesini düzgün hizalama */
+        .password-container {
+            position: relative;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding-right: 40px; /* Sağ tarafta göz simgesi için boşluk bırak */
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px; /* Göz simgesini şifre kutusunun sağına yasla */
+            top: 50%; /* Dikey ortala */
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            font-size: 20px;
+        }
+
+        .password-toggle:hover {
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="login-box p-4 rounded shadow-lg">
+            <h2 class="text-center">Giriş Yap</h2>
+
+            <!-- Hata mesajı varsa göster -->
+           <p th:if="${param.error}" style="color: red;">Hatalı kullanıcı adı veya şifre!</p>
+            <form th:action="@{/AnasayfaGiris}" method="post">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="username" name="username" 
+                           placeholder="Kullanıcı adınızı girin" required 
+                            th:value="${username}">
+                </div>
+
+                <div class="mb-3 password-container">
+                    <input type="password" class="form-control" id="password" name="password" 
+                           placeholder="Şifrenizi girin" required >
+                    <!-- Göz simgesi kutunun içine sağa hizalanmış ve ortalanmış -->
+                    <i class="bi bi-eye password-toggle" id="togglePassword"></i>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+            </form>
+
+           <p class="text-start mt-3">
+    <a href="/SifreYenile" class="text-danger">Şifrenizi mi unuttunuz?</a>
+</p>
+
+    <p class="text-start mt-3">
+    <a href="/Kayıt" class="btn btn-lg w-50" 
+       style="background-color: #1abc9c; color: white; border: none; transition: 0.3s;"
+       onmouseover="this.style.backgroundColor='#16a085'" 
+       onmouseout="this.style.backgroundColor='#1abc9c'">
+       Kayıt Ol
+    </a>
+</p>
+        </div>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Şifreyi Göster/Gizle -->
+    <script>
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            var passwordField = document.getElementById("password");
+            var icon = this;
+            
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                passwordField.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        });
+    </script>
+
+</body>
+</html>

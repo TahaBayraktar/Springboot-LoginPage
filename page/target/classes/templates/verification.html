@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doğrulama Kodu</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+        }
+
+        .verification-box {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .verification-box h2 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #667eea;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #5563c1;
+        }
+
+        /* Hata mesajı */
+        .error-text {
+            color: red;
+            font-size: 14px;
+            display: none;
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="verification-box p-4 rounded shadow-lg">
+            <h2 class="text-center">Doğrulama Kodu</h2>
+
+            <!-- Hata mesajı varsa göster -->
+            <p class="text-danger text-center" th:if="${error}" th:text="${error}"></p>
+
+            <form th:action="@{/Dogrulama}" method="post" onsubmit="return validateVerificationCode()">
+                <div class="mb-3">
+                    <label for="verificationCode" class="form-label">E-posta adresinize gönderilen 6 haneli doğrulama kodunu girin:</label>
+                    <input type="text" class="form-control text-center" id="DogrulamaKodu" name="DogrulamaKodu" 
+                           placeholder="XXXXXX" maxlength="6" required oninput="validateNumber(this)" th:value="${DogrulamaKodu}">
+                           <input type="hidden" name="email" th:value="${email}" />
+                </div>
+
+                <!-- Hata mesajı (Yanlış giriş yapıldığında gösterilecek) -->
+                <p id="codeError" class="error-text">Geçerli bir 6 haneli kod girin!</p>
+
+                <button type="submit" id="verifyButton" class="btn btn-primary w-100">Doğrula</button>
+            </form>
+            <p class="text-center mt-3">
+   			 Doğrulama kodu almadın mı? 
+    <form th:action="@{/TekrarGonder}" method="post" onsubmit="disableResendButton()">
+        <input type="hidden" name="email" th:value="${email}" />
+        <button type="submit" id="resendButton" class="btn btn-link">Tekrar Gönder</button>
+    </form>
+</p>
+
+           
+        </div>
+    </div>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript: Kod Doğrulama -->
+    <script>
+        function validateNumber(input) {
+            input.value = input.value.replace(/[^0-9]/g, ''); // Sadece rakamlara izin verilir
+        }
+
+        function validateVerificationCode() {
+            var verificationCode = document.getElementById("DogrulamaKodu").value;
+            var codeError = document.getElementById("codeError");
+
+            if (verificationCode.length !== 6) {
+                codeError.style.display = "block"; // Hata mesajını göster
+                return false; // Formun gönderilmesini engelle
+            } else {
+                codeError.style.display = "none"; // Hata mesajını gizle
+                return true; // Formun gönderilmesine izin ver
+            }
+        }
+    </script>
+    <script>
+    function disableResendButton() {
+        var resendButton = document.getElementById("resendButton");
+        resendButton.innerHTML = "Gönderiliyor...";
+        resendButton.disabled = true;
+    }
+</script>
+
+</body>
+</html>
